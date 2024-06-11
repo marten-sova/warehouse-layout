@@ -1,0 +1,42 @@
+{
+  "name": "hello-next",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "MIT",
+  "author": "",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@apollo/client": "3.10.4",
+    "@pothos/plugin-prisma": "3.65.2",
+    "@pothos/core": "3.41.1",
+    "@prisma/client": "5.15.0",
+    "graphql": "16.8.1",
+    "graphql-scalars": "1.23.0",
+    "graphql-yoga": "5.3.1",
+    "next": "14.2.3",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-markdown": "9.0.1"
+  },
+  "devDependencies": {
+    "@types/graphql": "14.5.0",
+    "@types/node": "20.14.2",
+    "@types/react": "18.3.3",
+    "prisma": "5.15.0",
+    "ts-node": "10.9.2",
+    "typescript": "5.4.5"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "pkg": {
+    "assets": [
+      "node_modules/.prisma/client/*.node"
+    ]
+  }
+}
