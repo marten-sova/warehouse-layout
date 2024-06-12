@@ -1,33 +1,33 @@
 import Layout from "../components/Layout"
 import gql from "graphql-tag"
 import client from "../lib/apollo-client"
-import Post, { PostProps } from "../components/Post"
+import Warehouse, { WarehouseProps } from "../components/Warehouse"
 
 
-const Blog: React.FC<{ data: { feed: PostProps[] } }> = (props) => {
+const WarehouseList: React.FC<{ data: { warehouses: WarehouseProps[] } }> = (props) => {
   return (
     <Layout>
       <div className="page">
-        <h1>My Blog</h1>
+        <h1>Warehouses List</h1>
         <main>
-          {props.data.feed.map(post => (
-            <div key={post.id} className="post">
-              <Post post={post} />
+          {props.data.warehouses.map(warehouse => (
+            <div key={warehouse.id} className="warehouse">
+              <Warehouse warehouse={warehouse} />
             </div>
           ))}
         </main>
       </div>
       <style jsx>{`
-        .post {
+        .warehouse {
           background: white;
           transition: box-shadow 0.1s ease-in;
         }
 
-        .post:hover {
+        .warehouse:hover {
           box-shadow: 1px 1px 3px #aaa;
         }
 
-        .post + .post {
+        .warehouse + .warehouse {
           margin-top: 2rem;
         }
       `}</style>
@@ -38,15 +38,17 @@ const Blog: React.FC<{ data: { feed: PostProps[] } }> = (props) => {
 export async function getServerSideProps() {
   const { data } = await client.query({
     query: gql`
-      query FeedQuery {
-        feed {
+      query Warehouses {
+        warehouses {
           id
-          title
-          content
-          published
-          author {
+          name
+          zones {
             id
-            name
+            zoneNumber
+            shelves {
+              id
+              name
+            }
           }
         }
       }
@@ -60,4 +62,4 @@ export async function getServerSideProps() {
   };
 }
 
-export default Blog
+export default WarehouseList

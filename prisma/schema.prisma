@@ -21,29 +21,29 @@ model User {
 model Post {
   authorId  Int?
   content   String?
-  id        Int     @default(autoincrement()) @id
-  published Boolean @default(false)
+  id        Int       @default(autoincrement()) @id
+  published Boolean   @default(false)
   title     String
-  author    User?   @relation(fields: [authorId], references: [id])
+  author    User?     @relation(fields: [authorId], references: [id])
 }
 
 model Warehouse {
-  id    Int     @default(autoincrement()) @id
-  name  String
-  zones Zone[]
+  id      String  @default(uuid()) @id
+  name    String
+  zones   Zone[]
 }
 
 model Zone {
-  id           Int        @default(autoincrement()) @id
-  number       Int
-  warehouseId  Int?
-  warehouse    Warehouse? @relation(fields: [warehouseId], references: [id])
+  id           String     @default(uuid()) @id
+  zoneNumber   Int        @default(1)
+  warehouseId  String
+  warehouse    Warehouse  @relation(fields: [warehouseId], references:  [id])
   shelves      Shelf[]
 }
 
 model Shelf {
-  id     Int      @default(autoincrement()) @id
-  name   String   @unique
-  zoneId Int?
-  zone   Zone?    @relation(fields: [zoneId], references: [id])
+  id      String    @default(uuid()) @id
+  name    String    @unique
+  zoneId  String
+  zone    Zone      @relation(fields: [zoneId], references: [id])
 }

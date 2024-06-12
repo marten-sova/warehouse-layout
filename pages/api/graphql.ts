@@ -51,7 +51,7 @@ builder.prismaObject("Warehouse", {
 builder.prismaObject("Zone", {
   fields: (t) => ({
     id: t.exposeID('id'),
-    number: t.exposeInt('number'),
+    zoneNumber: t.exposeInt('zoneNumber'),
     warehouse: t.relation('warehouse'),
     shelves: t.relation('shelves')
   })
@@ -85,16 +85,16 @@ builder.mutationField('createZone', (t) =>
   t.prismaField({
     type: 'Zone',
     args: {
-      number: t.arg.int({ required: true }),
+      zoneNumber: t.arg.int({ required: true }),
       warehouseId: t.arg.id({ required: true }),
     },
     resolve: async (query, _parent, args, _info) =>
       prisma.zone.create({
         ...query,
         data: {
-          number: args.number,
+          zoneNumber: args.zoneNumber,
           warehouse: {
-            connect: { id: Number(args.warehouseId) }
+            connect: { id: String(args.warehouseId) }
           }
         }
       })
@@ -114,7 +114,7 @@ builder.mutationField('createShelf', (t) =>
         data: {
           name: args.name,
           zone: {
-            connect: { id: Number(args.zoneId) }
+            connect: { id: String(args.zoneId) }
           }
         }
       })
@@ -129,7 +129,22 @@ builder.queryField('warehouses', (t) =>
   })
 )
 
-
+builder.queryField('warehouse', (t) =>
+  t.prismaField({
+    type: 'Warehouse',
+    args: {
+      id: t.arg.id({ required: true }),
+    },
+    nullable: true,
+    resolve: async (query, _parent, args, _info) =>
+      prisma.warehouse.findUnique({
+        ...query,
+        where: {
+          id: String(args.id)
+        }
+      })
+  })
+)
 
 builder.queryField('feed', (t) =>
   t.prismaField({

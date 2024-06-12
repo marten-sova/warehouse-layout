@@ -9,3 +9,5 @@ TODO: Clean up and collate.
 Schema
 - A **warehouse** has many **zones**
 - A **zone** has many **shelves**
+- **Shelves** require unique names, but are also given IDs in case different warehouses want to reuse a name. E.g., every warehouse probably has a shelf of `cardboard_boxes`.
+
