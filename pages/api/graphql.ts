@@ -40,6 +40,97 @@ builder.prismaObject("Post", {
   })
 })
 
+builder.prismaObject("Warehouse", {
+  fields: (t) => ({
+    id: t.exposeID('id'),
+    name: t.exposeString('name'),
+    zones: t.relation('zones')
+  })
+})
+
+builder.prismaObject("Zone", {
+  fields: (t) => ({
+    id: t.exposeID('id'),
+    number: t.exposeInt('number'),
+    warehouse: t.relation('warehouse'),
+    shelves: t.relation('shelves')
+  })
+})
+
+builder.prismaObject("Shelf", {
+  fields: (t) => ({
+    id: t.exposeID('id'),
+    name: t.exposeString('name'),
+    zone: t.relation('zone')
+  })
+})
+
+builder.mutationField('createWarehouse', (t) =>
+  t.prismaField({
+    type: 'Warehouse',
+    args: {
+      name: t.arg.string({ required: true }),
+    },
+    resolve: async (query, _parent, args, _info) =>
+      prisma.warehouse.create({
+        ...query,
+        data: {
+          name: args.name
+        }
+      })
+  })
+)
+
+builder.mutationField('createZone', (t) =>
+  t.prismaField({
+    type: 'Zone',
+    args: {
+      number: t.arg.int({ required: true }),
+      warehouseId: t.arg.id({ required: true }),
+    },
+    resolve: async (query, _parent, args, _info) =>
+      prisma.zone.create({
+        ...query,
+        data: {
+          number: args.number,
+          warehouse: {
+            connect: { id: Number(args.warehouseId) }
+          }
+        }
+      })
+  })
+)
+
+builder.mutationField('createShelf', (t) =>
+  t.prismaField({
+    type: 'Shelf',
+    args: {
+      name: t.arg.string({ required: true }),
+      zoneId: t.arg.id({ required: true }),
+    },
+    resolve: async (query, _parent, args, _info) =>
+      prisma.shelf.create({
+        ...query,
+        data: {
+          name: args.name,
+          zone: {
+            connect: { id: Number(args.zoneId) }
+          }
+        }
+      })
+  })
+)
+
+builder.queryField('warehouses', (t) =>
+  t.prismaField({
+    type: ['Warehouse'],
+    resolve: async (query, _parent, _args, _info) =>
+      prisma.warehouse.findMany(query)
+  })
+)
+
+
+
 builder.queryField('feed', (t) =>
   t.prismaField({
     type: ['Post'],
